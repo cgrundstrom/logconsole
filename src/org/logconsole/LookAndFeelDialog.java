@@ -1,0 +1,127 @@
+/*
+ * Copyright (c) 2002 Ambergini, Inc., All Rights Reserved
+ *
+ * LogConsole
+ *
+ * Author: Carl Grundstrom
+ * Date: April 2002
+ */
+package org.logconsole;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JRadioButton;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
+public class LookAndFeelDialog extends JDialog {
+    ButtonGroup buttonGroup = new ButtonGroup();
+
+    public LookAndFeelDialog(JFrame owner) {
+        super(owner, "Look and Feel", true);
+
+        Container pane = getContentPane();
+        pane.setLayout(new BorderLayout());
+
+        String[] lookAndFeels = {
+            "System",
+//            "Autumn",
+            "Business Black Steel",
+//            "Business Blue Steel",
+//            "Business",
+            "Challenger Deep",
+            "Creme Coffee",
+//            "Creme",
+            "Emerald Dusk",
+//            "Field Of Wheat",
+//            "Finding Nemo",
+//            "Green Magic",
+            "Magma",
+            "Mango",
+            "Mist Aqua",
+//            "Mist Silver",
+            "Moderate",
+            "Nebula Brick Wall",
+            "Nebula",
+//            "Office Blue 2007",
+            "Office Silver 2007",
+            "Raven Graphite Glass",
+//            "Raven Graphite",
+            "Raven",
+            "Sahara"
+        };
+        String currentLookAndFeel;
+        try {
+            currentLookAndFeel = LogConsole.propertyManager.getStringProperty("lookAndFeel");
+        }
+        catch (LogConsoleException e) {
+            currentLookAndFeel = "System";
+        }
+
+        Box contentBox = Box.createVerticalBox();
+
+        Box radioBox = Box.createVerticalBox();
+        for (String lookAndFeel : lookAndFeels) {
+            JRadioButton radio = new JRadioButton(lookAndFeel);
+            radio.getModel().setActionCommand(lookAndFeel);
+            buttonGroup.add(radio);
+            if (lookAndFeel.equals(currentLookAndFeel))
+                buttonGroup.setSelected(radio.getModel(), true);
+            radioBox.add(radio);
+        }
+        contentBox.add(radioBox);
+        pane.add(contentBox, BorderLayout.CENTER);
+
+        JButton okButton = new CustomTextButton("OK");
+        okButton.setDefaultCapable(true);
+        getRootPane().setDefaultButton(okButton);
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ButtonModel model = buttonGroup.getSelection();
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                try {
+                    LogConsole.setLookAndFeel(model.getActionCommand());
+                }
+                finally {
+                    setCursor(Cursor.getDefaultCursor());
+                }
+                dispose();
+            }
+        });
+
+        JButton cancelButton = new CustomTextButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
+        Box buttonBox = Box.createHorizontalBox();
+        buttonBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        buttonBox.add(Box.createHorizontalGlue());
+        buttonBox.add(okButton);
+        buttonBox.add(Box.createHorizontalStrut(20));
+        buttonBox.add(cancelButton);
+        buttonBox.add(Box.createHorizontalGlue());
+
+        pane.add(buttonBox, BorderLayout.SOUTH);
+
+        // Show the window
+        Point location = owner.getLocation();
+        location.x += 50;
+        location.y += 100;
+        setLocation(location);
+        pack();
+        setVisible(true);
+    }
+}

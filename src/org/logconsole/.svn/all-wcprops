@@ -1,0 +1,131 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole
+END
+FindDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/FindDialog.java
+END
+BorderlessButton.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/BorderlessButton.java
+END
+LogSource.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/LogSource.java
+END
+LicenseDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/LicenseDialog.java
+END
+LookAndFeelDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/LookAndFeelDialog.java
+END
+LogConsole.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/LogConsole.java
+END
+FilterDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/FilterDialog.java
+END
+Project.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/Project.java
+END
+CustomTextArea.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/CustomTextArea.java
+END
+CustomImageButton.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/CustomImageButton.java
+END
+CustomTextButton.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/CustomTextButton.java
+END
+Util.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/Util.java
+END
+CustomTextLabel.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/CustomTextLabel.java
+END
+PropertyManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/PropertyManager.java
+END
+FilterManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/FilterManager.java
+END
+CustomTabbedPane.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/CustomTabbedPane.java
+END
+VariableManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/VariableManager.java
+END
+LogConsoleException.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/LogConsoleException.java
+END
+ProjectDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/ProjectDialog.java
+END
+AboutDialog.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/AboutDialog.java
+END
+CustomMultiLineLabel.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ambergini/!svn/ver/25/dev/logconsole/src/org/logconsole/CustomMultiLineLabel.java
+END

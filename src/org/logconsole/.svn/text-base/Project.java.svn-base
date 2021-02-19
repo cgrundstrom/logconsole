@@ -1,0 +1,167 @@
+package org.logconsole;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+public class Project {
+    private File projectFile;
+    private ArrayList<LogSource> logSourceList = new ArrayList<LogSource>();
+    private String currentLogSource;
+
+    public Project() {        
+    }
+
+    public Project(Project originalProject) {
+        projectFile = originalProject.projectFile;
+        currentLogSource = originalProject.currentLogSource;
+    }
+
+    public String getCurrentLogSource() {
+        return currentLogSource;
+    }
+
+    public void setCurrentLogSource(String currentLogSource) {
+        this.currentLogSource = currentLogSource;
+    }
+
+    public Project(File projectFile) throws Exception {
+        this.projectFile = projectFile;
+
+        DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
+        Document document = domBuilder.parse(projectFile);
+
+        Node sourcesNode = document.getDocumentElement();
+        if (!sourcesNode.getNodeName().equals("sources"))
+            throw new LogConsoleException("Invalid XML root in " + projectFile + ": " + sourcesNode.getNodeName());
+
+        NamedNodeMap sourcesMap = sourcesNode.getAttributes();
+        Node currentLogSourceNode = sourcesMap.getNamedItem("currentLogSource");
+        currentLogSource = currentLogSourceNode == null ? "" : currentLogSourceNode.getNodeValue();
+
+        NodeList sourceNodes = sourcesNode.getChildNodes();
+        int len1 = sourceNodes.getLength();
+        for (int i = 0 ; i < len1; i++) {
+            Node sourceNode = sourceNodes.item(i);
+            if (!(sourceNode instanceof Element))
+                continue;
+            if (!sourceNode.getNodeName().equals("source"))
+                throw new LogConsoleException("Invalid XML tag in " + projectFile + " :" + sourceNode.getNodeName());
+
+            NamedNodeMap sourceMap = sourceNode.getAttributes();
+            Node nameNode = sourceMap.getNamedItem("name");
+            if (nameNode == null)
+                throw new LogConsoleException("xml attribute 'name' not found in " + projectFile);
+            String name = nameNode.getNodeValue();
+
+            Node fileNode = sourceMap.getNamedItem("file");
+            if (fileNode == null)
+                throw new LogConsoleException("xml tag 'file' not found for source '" + name + "' in " + projectFile);
+            String file = fileNode.getNodeValue();
+
+            boolean sourceEnabled;
+            Node sourceEnabledNode = sourceMap.getNamedItem("enabled");
+            sourceEnabled = sourceEnabledNode == null || sourceEnabledNode.getNodeValue().equalsIgnoreCase("true");
+
+            LogSource logSource = addNewLogSource(null, name, file, sourceEnabled);
+
+            NodeList sourceChildNodes = sourceNode.getChildNodes();
+            int len2 = sourceChildNodes.getLength();
+            for (int j = 0; j < len2; j++) {
+                Node sourceChildNode = sourceChildNodes.item(j);
+                if (!(sourceChildNode instanceof Element))
+                    continue;
+                if (sourceChildNode.getNodeName().equals("filters")) {
+                    NodeList filterNodes = sourceChildNode.getChildNodes();
+                    int len3 = filterNodes.getLength();
+                    for (int k = 0; k < len3; k++) {
+                        Node filterNode = filterNodes.item(k);
+                        if (!(filterNode instanceof Element))
+                            continue;
+                        if (!filterNode.getNodeName().equals("filter"))
+                            throw new LogConsoleException("Invalid XML tag in " + projectFile + " :" + filterNode.getNodeName());
+
+                        NamedNodeMap filterMap = filterNode.getAttributes();
+                        Node regexNode = filterMap.getNamedItem("regex");
+                        if (regexNode == null)
+                            throw new LogConsoleException("xml attribute 'regex' not found in " + projectFile);
+                        String regex = regexNode.getNodeValue();
+
+                        Node filterEnabledNode = sourceMap.getNamedItem("enabled");
+                        boolean filterEnabled = filterEnabledNode == null || filterEnabledNode.getNodeValue().equalsIgnoreCase("true");
+                        logSource.filterManager.addFilter(regex, filterEnabled);
+                    }
+                }
+                else
+                    throw new LogConsoleException("Invalid XML tag in " + projectFile + " :" + sourceChildNode.getNodeName());
+            }
+        }
+    }
+
+    public void write() throws IOException {
+        PrintWriter out = new PrintWriter(new FileWriter(projectFile));
+        try {
+            out.println("<sources currentLogSource=\"" + Util.xmlEncode(currentLogSource) + "\">");
+            for (LogSource logSource : logSourceList) {
+                out.print("  <source " +
+                        "name=\"" + Util.xmlEncode(logSource.getDisplayName()) + "\" " +
+                        "file=\"" + Util.xmlEncode(logSource.getUnexpandedFile()) + "\" " +
+                        "enabled=\"" + logSource.isEnabled() + "\"");
+                ArrayList<FilterManager.Filter> filterList = logSource.filterManager.getFilters();
+                if (filterList.size() > 0) {
+                    out.println(">");
+                    out.println("    <filters>");
+                    for (FilterManager.Filter filter : filterList)
+                        out.println("      <filter " +
+                                "regex=\"" + Util.xmlEncode(filter.regex) + "\" " +
+                                "enabled=\"" + filter.enabled + "\" />");
+                    out.println("    </filters>");
+                    out.println("  </source>");
+                }
+                else
+                    out.println(" />");
+            }
+            out.println("</sources>");
+        }
+        finally {
+            out.close();
+        }
+    }
+
+    public File getProjectFile() {
+        return projectFile;
+    }
+
+    public void setProjectFile(File projectFile) {
+        this.projectFile = projectFile;
+    }
+
+    public LogSource addNewLogSource(LogSource originalLogSource, String name, String file, boolean enabled) {
+        LogSource logSource = new LogSource(name, file, enabled);
+        if (originalLogSource != null)
+            logSource.filterManager = originalLogSource.filterManager;
+
+        logSourceList.add(logSource);
+        return logSource;
+    }
+
+    public ArrayList<LogSource> getLogSourceList() {
+        return logSourceList;
+    }
+
+    public void close() {
+        for (LogSource logSource : logSourceList)
+            logSource.close();
+    }
+}

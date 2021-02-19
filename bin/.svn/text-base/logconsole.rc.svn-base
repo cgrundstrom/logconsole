@@ -1,0 +1,55 @@
+#set -x
+#
+# CP Luminis development
+#
+PS1='L \w> '
+
+#
+# Set directory locations
+#
+#export CVSROOT=:pserver:cgrundstrom@merlin:c:\\cvs
+
+#
+# Aliases
+#
+#alias cvsup='cvs -q up -Pd'
+
+#
+# Set directory locations
+#
+export LOGCONSOLE=/z/ambergini/logconsole
+if [ "$OS" = "Windows_NT" ]
+then
+  export LOGCONSOLE_PATH="`cygpath -m $LOGCONSOLE`"
+else
+  export LOGCONSOLE_PATH="$LOGCONSOLE"
+fi
+
+#
+# Set path
+#
+addToBeginningOfPath $LOGCONSOLE_PATH/bin
+
+#
+# Set classpath
+#
+export CLASSPATH=${LOGCONSOLE_PATH}/classes${PATH_SEP}${LOGCONSOLE_PATH}/lib/log4j-1.2.8.jar
+
+#
+# Miscellaneous
+#
+
+#
+# Functions
+#
+hset()
+{
+    cdset $LOGCONSOLE $@
+}
+
+sset()
+{
+    cdset $LOGCONSOLE/src/org/logconsole $@
+}
+
+zset
